@@ -6,6 +6,6 @@ The repository provides data and scripts related to the publication
 
 For regularly updated data of the UPI and IPI, please see the corresponding repositories of the [UPI](https://github.com/JonasRieger/upi) and [IPI](https://github.com/JonasRieger/ipi) indices.
 
-Please note: For legal reasons the repository cannot provide all data, e.g., the plain texts of the newspaper articles in the file `labeled.csv`. Please [let us know](https://github.com/JonasRieger/upi/issues) if you feel that there is anything missing that we could add. 
+Please note: For legal reasons the repository cannot provide all data, e.g., the plain texts of the newspaper articles in the file `labeled.csv` are deleted. Please [let us know](https://github.com/JonasRieger/upi/issues) if you feel that there is anything missing that we could add. 
 
 For bug reports, comments and questions please use the [issue tracker](https://github.com/JonasRieger/mufin23/issues).
