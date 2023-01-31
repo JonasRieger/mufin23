@@ -1,8 +1,6 @@
 library(data.table)
 library(ggplot2)
-library(cowplot)
 
-#### IPI
 ipi = fread("ipi.csv")
 
 ipi_misc = cbind(ipi[,c(1,7)], "Miscellaneous")
@@ -21,6 +19,20 @@ ipi = rbind(cbind(ipi[, c(1,2)], "Central Banks", "Causal"),
 colnames(ipi) = c("date", "ipi", "Topic", "Type")
 ipi[,Type := factor(Type, levels = c("Causal", "Consequences", "Other"))]
 
+ggplot(ipi) +
+  aes(x = date, y = ipi, group = Topic, color = Topic) +
+  geom_line() +
+  xlab("") + ylab("Share") + theme(legend.position = "top") +
+  facet_wrap(~Type, nrow = 3) + 
+  scale_x_date(breaks = as.Date(c("2001-01-01", "2005-01-01", "2010-01-01",
+                                  "2015-01-01", "2020-01-01", "2022-01-01")),
+               date_minor_breaks = "1 year",
+               labels = c(2000+c(1,5,10,15,20,22))) +
+  scale_y_continuous(minor_breaks = seq(0,1,0.01))
+# 750x450
+
+
+# new version: separated legends
 ggList1 = lapply(split(ipi, ipi$Type), function(i) {
   ggplot(i) +
     annotate(geom = "rect",
@@ -89,6 +101,14 @@ upi_topics = cbind(upi_topics, Type = rep(upi_sub, each = n_tmp))
 upi_topics[, Topic := factor(Topic, levels = sort(unique(as.character(Topic))))]
 upi_topics[, Type := factor(Type, levels = c("Real Economy", "Politics", "Financial Markets"))]
 
+ggplot(upi_topics[Topic != "Miscellaneous"]) +
+  aes(x = date, y = upi, group = Topic, color = Topic) +
+  geom_line() +
+  xlab("") + ylab("Share") + theme(legend.position = "top") +
+  facet_wrap(~Type, nrow = 3)
+
+
+# new version: separated legends
 ggList2 = lapply(split(upi_topics[Topic != "Miscellaneous"], upi_topics[Topic != "Miscellaneous", Type]), function(i) {
   ggplot(i) +
     annotate(geom = "rect",
@@ -144,3 +164,10 @@ ggList2[[5]] = ggplot(upi_ges) +
 upi_plot = cowplot::plot_grid(plotlist = ggList2[c(5,1:4)], ncol = 1, align = 'v', rel_heights = c(1.5,2.12,2.12,1.8,1.5))
 
 cowplot::plot_grid(upi_plot, ipi_plot)
+
+# 1000x1250 -> 10.416666x13.02083333
+
+cairo_ps(file = "upi_ipi.eps", fallback_resolution = 600, height = 13.5, width = 10.5)
+cowplot::plot_grid(upi_plot, ipi_plot)
+dev.off()
+
